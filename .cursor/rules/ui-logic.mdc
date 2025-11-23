@@ -1,0 +1,181 @@
+---
+alwaysApply: true
+---
+
+# UI & Logic Rules for JURASSIC HOME Real Estate Website
+
+## Design Principles
+
+### Luxury & Elegance
+- Use **light font weights** (300-400) for headings to create an elegant, premium feel
+- Implement **generous spacing** (py-32, py-40) for breathing room
+- Apply **subtle gradients** (from-amber-50 to-white) for depth without being overwhelming
+- Use **refined color palette**: amber-600/700 for accents, gray-900 for text, white/stone-50 for backgrounds
+- Add **subtle patterns** with low opacity (opacity-[0.02]) for texture
+- Implement **smooth transitions** (duration-300, duration-500) for all interactive elements
+- Use **backdrop blur** (backdrop-blur-md) for modern glassmorphism effects
+
+### Typography
+- Headings: Use `font-light` (300) for large headings, `font-semibold` for emphasis
+- Body text: Use `font-light` for elegant readability
+- Tracking: Use `tracking-tight` for headings, `tracking-wide` for buttons/links
+- Line height: Use `leading-relaxed` or `leading-snug` for optimal readability
+
+### Color System
+- **Primary Accent**: amber-600, amber-700 (luxury gold)
+- **Text**: gray-900 (headings), gray-700 (body), gray-600 (secondary)
+- **Backgrounds**: white, gray-50, stone-50 (subtle variations)
+- **Borders**: gray-200, gray-300 (subtle), amber-200 (accent)
+- **Hover States**: amber-700, amber-800 (darker shades)
+
+## Component Patterns
+
+### Navigation
+- Fixed position with backdrop blur (`bg-white/98 backdrop-blur-md`)
+- Height: `h-24` for luxury spacing
+- Underline animations on hover with gradient (`bg-gradient-to-r from-amber-600 to-amber-400`)
+- Language switcher integrated in navigation
+
+### Hero Sections
+- Large typography: `text-5xl md:text-7xl lg:text-8xl`
+- Gradient text for highlights: `bg-gradient-to-r from-amber-700 via-amber-600 to-amber-500 bg-clip-text text-transparent`
+- Animated blob backgrounds for visual interest
+- CTA buttons with gradient backgrounds and hover effects
+
+### Cards & Sections
+- Rounded corners: `rounded-2xl` or `rounded-3xl` for modern feel
+- Border: `border border-gray-200` with hover state `hover:border-amber-200`
+- Shadow: `hover:shadow-xl` or `hover:shadow-2xl` on hover
+- Transform: `hover:-translate-y-2` or `hover:-translate-y-3` for lift effect
+- Padding: `p-8` to `p-12` for generous spacing
+
+### Buttons
+- Primary: Gradient background (`bg-gradient-to-r from-amber-700 to-amber-600`)
+- Secondary: White with border (`border-2 border-gray-300`)
+- Hover: Scale transform (`hover:scale-105`) and shadow increase
+- Tracking: `tracking-wide` for premium feel
+- Padding: `px-10 py-5` for comfortable click targets
+
+## Internationalization (i18n)
+
+### Translation Usage
+- Always use `useTranslations()` hook from `next-intl`
+- Translation keys follow nested structure: `t('section.subsection.key')`
+- All user-facing text must be translated
+- Use `Link` and `useRouter` from `@/i18n/routing` for navigation
+
+### Language Support
+- Default: Japanese (jp)
+- Secondary: Vietnamese (vi)
+- Language switcher component available in navigation
+- Locale stored in URL path: `/jp/...` or `/vi/...`
+
+## Code Organization
+
+### File Structure
+```
+app/
+  [locale]/
+    layout.tsx      # Locale-specific layout with i18n provider
+    page.tsx        # Main page
+  components/       # Reusable components
+    Navigation.tsx
+    Hero.tsx
+    About.tsx
+    ...
+  globals.css       # Global styles
+i18n/
+  routing.ts        # i18n routing configuration
+  request.ts        # i18n request configuration
+messages/
+  jp.json           # Japanese translations
+  vi.json           # Vietnamese translations
+```
+
+### Component Structure
+1. Import statements (React, next-intl, routing)
+2. Component function with `useTranslations` hook
+3. Translation data extraction
+4. JSX return with luxury styling
+5. Export default
+
+### Naming Conventions
+- Components: PascalCase (e.g., `Navigation.tsx`)
+- Translation keys: camelCase (e.g., `hero.title`)
+- CSS classes: Tailwind utility classes
+- Files: kebab-case for config files, PascalCase for components
+
+## Animation & Interactions
+
+### Hover Effects
+- Always include `transition-all duration-300` or `duration-500`
+- Use `group` and `group-hover:` for coordinated animations
+- Transform on hover: `hover:-translate-y-2`, `hover:scale-105`
+- Color transitions: `hover:text-amber-700`
+- Shadow increases: `hover:shadow-xl`
+
+### Loading States
+- Use skeleton loaders for content
+- Implement smooth fade-in animations
+- Consider intersection observer for scroll animations
+
+## Responsive Design
+
+### Breakpoints
+- Mobile: Default (no prefix)
+- Tablet: `md:` (768px+)
+- Desktop: `lg:` (1024px+)
+
+### Spacing Scale
+- Small: `p-4`, `p-6`
+- Medium: `p-8`, `p-10`
+- Large: `p-12`, `py-32`, `py-40`
+
+### Typography Scale
+- Mobile: `text-4xl`, `text-5xl`
+- Desktop: `md:text-5xl`, `lg:text-6xl`, `lg:text-8xl`
+
+## Performance
+
+### Image Optimization
+- Use Next.js `Image` component for all images
+- Provide proper `alt` text for accessibility
+- Use appropriate image sizes (aspect-video, aspect-square)
+
+### Code Splitting
+- Components are automatically code-split by Next.js
+- Use dynamic imports for heavy components if needed
+
+## Accessibility
+
+### Requirements
+- All interactive elements must have proper ARIA labels
+- Use semantic HTML (`<nav>`, `<section>`, `<article>`, `<footer>`)
+- Ensure sufficient color contrast (WCAG AA minimum)
+- Keyboard navigation support for all interactive elements
+
+## Business-Specific Considerations
+
+### Real Estate Focus
+- Emphasize trust and professionalism
+- Use high-quality imagery placeholders
+- Highlight key features: location, design, quality
+- Clear call-to-action buttons for inquiries
+- Contact information prominently displayed
+
+### Luxury Positioning
+- Premium color palette (amber/gold accents)
+- Elegant typography with light weights
+- Generous white space
+- Subtle animations and transitions
+- Refined, sophisticated aesthetic
+
+## Best Practices
+
+1. **Consistency**: Maintain consistent spacing, typography, and color usage
+2. **Performance**: Optimize images, use lazy loading where appropriate
+3. **Accessibility**: Always include ARIA labels and semantic HTML
+4. **Internationalization**: Never hardcode text, always use translations
+5. **Responsive**: Test on multiple screen sizes
+6. **Elegance**: Less is more - avoid clutter, prioritize white space
+7. **Transitions**: Smooth animations enhance perceived quality
