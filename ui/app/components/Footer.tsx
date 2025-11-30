@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { api, type CompanyInfo, type Service } from "@/lib/api";
-import { getCachedData, CacheKeys } from "@/lib/cache";
 
 interface FooterProps {
   companyInfo?: CompanyInfo | null;
@@ -20,32 +19,16 @@ export default function Footer({ companyInfo }: FooterProps) {
   const [services, setServices] = useState<Service[]>([]);
 
   useEffect(() => {
-    // Check cache first
-    const cachedServices = getCachedData<Service[]>(
-      CacheKeys.SERVICES(locale, true)
-    );
-
     const fetchServices = async () => {
       try {
-        // This will use cache if available, or fetch and cache
         const servicesData = await api.getServices(true, locale);
         setServices(servicesData);
       } catch (error) {
-        // If fetch fails and we have cached data, use it
-        if (cachedServices) {
-          setServices(cachedServices);
-        }
         // Silently fail - footer will show empty services list
       }
     };
 
-    // If we have cached data, set it immediately and fetch in background
-    if (cachedServices) {
-      setServices(cachedServices);
-      fetchServices(); // Fetch in background to refresh cache
-    } else {
-      fetchServices(); // Fetch immediately if no cache
-    }
+    fetchServices();
   }, [locale]);
 
   const footerLinks = {

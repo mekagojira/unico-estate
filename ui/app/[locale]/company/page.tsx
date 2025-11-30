@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import Navigation from '../../components/Navigation';
-import Company from '../../components/Company';
-import Footer from '../../components/Footer';
-import { api, type CompanyInfo } from '@/lib/api';
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import Navigation from "../../components/Navigation";
+import Company from "../../components/Company";
+import Footer from "../../components/Footer";
+import { api, type CompanyInfo } from "@/lib/api";
 
 // Disable SSR for this page to prevent hydration mismatches
 const CompanyPageContent = () => {
@@ -18,7 +18,7 @@ const CompanyPageContent = () => {
         const data = await api.getCompanyInfo();
         setCompanyInfo(data);
       } catch (error) {
-        console.error('Failed to fetch company info:', error);
+        console.error("Failed to fetch company info:", error);
       } finally {
         setLoading(false);
       }

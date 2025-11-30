@@ -4,7 +4,8 @@
  */
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://land-api.uni-co-group.com";
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://unico-land-service.uni-co-group.com";
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -115,10 +116,7 @@ class ApiClient {
    * @param id - Service ID
    * @param locale - Locale for localized fields (jp or vi)
    */
-  async getService(
-    id: string,
-    locale: string = "jp"
-  ): Promise<Service> {
+  async getService(id: string, locale: string = "jp"): Promise<Service> {
     const params = new URLSearchParams();
     params.append("locale", locale);
 

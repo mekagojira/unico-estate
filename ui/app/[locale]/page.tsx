@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import Hero from '../components/Hero';
-import LuxuryGallery from '../components/LuxuryGallery';
-import About from '../components/About';
-import Services from '../components/Plans';
-import Blog from '../components/Blog';
-import News from '../components/News';
-import Footer from '../components/Footer';
-import Navigation from '../components/Navigation';
-import { api, type CompanyInfo } from '@/lib/api';
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import Hero from "../components/Hero";
+import LuxuryGallery from "../components/LuxuryGallery";
+import About from "../components/About";
+import Services from "../components/Plans";
+import Blog from "../components/Blog";
+import News from "../components/News";
+import Footer from "../components/Footer";
+import Navigation from "../components/Navigation";
+import { api, type CompanyInfo } from "@/lib/api";
 
 // Disable SSR for this page to prevent hydration mismatches
 const HomePageContent = () => {
@@ -18,7 +18,8 @@ const HomePageContent = () => {
 
   useEffect(() => {
     // Fetch company info for footer
-    api.getCompanyInfo()
+    api
+      .getCompanyInfo()
       .then(setCompanyInfo)
       .catch(() => {
         // Silently fail - footer will use translations as fallback
@@ -43,4 +44,3 @@ const HomePageContent = () => {
 export default dynamic(() => Promise.resolve(HomePageContent), {
   ssr: false,
 });
-
