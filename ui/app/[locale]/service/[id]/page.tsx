@@ -7,7 +7,6 @@ import Navigation from '../../../components/Navigation';
 import ServiceDetail from '../../../components/ServiceDetail';
 import Footer from '../../../components/Footer';
 import { api, type Service, type CompanyInfo } from '@/lib/api';
-import { getCachedData, CacheKeys } from '@/lib/cache';
 
 const validServiceIds = ['sales', 'rental', 'management', 'foreignSupport'];
 
@@ -29,25 +28,8 @@ const ServicePageContent = () => {
       return;
     }
 
-    // Only read from localStorage after component mounts (client-side only)
-    const cachedService = getCachedData<Service>(CacheKeys.SERVICE(id, locale));
-    const cachedCompany = getCachedData<CompanyInfo>(CacheKeys.COMPANY_INFO);
-    
-    if (cachedService) {
-      setService(cachedService);
-    }
-    if (cachedCompany) {
-      setCompanyInfo(cachedCompany);
-    }
-    
-    // If we have cached data, we can show it immediately
-    if (cachedService || cachedCompany) {
-      setLoading(false);
-    }
-
     const fetchData = async () => {
       try {
-        // These will use cache if available, or fetch and cache
         const [serviceData, companyData] = await Promise.all([
           api.getService(id, locale).catch(() => null),
           api.getCompanyInfo().catch(() => null),
@@ -62,13 +44,7 @@ const ServicePageContent = () => {
       }
     };
 
-    // If we have cached data, fetch in background to update cache
-    // Otherwise, fetch immediately
-    if (cachedService || cachedCompany) {
-      fetchData(); // Fetch in background to refresh cache
-    } else {
-      fetchData(); // Fetch immediately if no cache
-    }
+    fetchData();
   }, [id, locale]);
 
   if (notFoundError) {

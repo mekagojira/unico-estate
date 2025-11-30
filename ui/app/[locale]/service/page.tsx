@@ -7,7 +7,6 @@ import Navigation from '../../components/Navigation';
 import ServicesList from '../../components/ServicesList';
 import Footer from '../../components/Footer';
 import { api, type Service, type CompanyInfo } from '@/lib/api';
-import { getCachedData, CacheKeys } from '@/lib/cache';
 
 // Disable SSR for this page to prevent hydration mismatches
 const ServicesPageContent = () => {
@@ -19,25 +18,8 @@ const ServicesPageContent = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Only read from localStorage after component mounts (client-side only)
-    const cachedServices = getCachedData<Service[]>(CacheKeys.SERVICES(locale, true));
-    const cachedCompany = getCachedData<CompanyInfo>(CacheKeys.COMPANY_INFO);
-    
-    if (cachedServices) {
-      setServices(cachedServices);
-    }
-    if (cachedCompany) {
-      setCompanyInfo(cachedCompany);
-    }
-    
-    // If we have cached data, we can show it immediately
-    if (cachedServices || cachedCompany) {
-      setLoading(false);
-    }
-
     const fetchData = async () => {
       try {
-        // These will use cache if available, or fetch and cache
         const [servicesData, companyData] = await Promise.all([
           api.getServices(true, locale).catch(() => []),
           api.getCompanyInfo().catch(() => null),
@@ -52,13 +34,7 @@ const ServicesPageContent = () => {
       }
     };
 
-    // If we have cached data, fetch in background to update cache
-    // Otherwise, fetch immediately
-    if (cachedServices || cachedCompany) {
-      fetchData(); // Fetch in background to refresh cache
-    } else {
-      fetchData(); // Fetch immediately if no cache
-    }
+    fetchData();
   }, [locale]);
 
   return (

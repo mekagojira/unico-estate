@@ -1,13 +1,10 @@
 /**
  * API Client for UI
- * Handles all API requests to the backend with localStorage caching
+ * Handles all API requests to the backend
  */
-
-import { getCachedData, setCachedData, CacheKeys } from "./cache";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://land-api.uni-co-group.com";
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -73,8 +70,8 @@ class ApiClient {
         "Content-Type": "application/json",
         ...options.headers,
       },
-      // Client-side fetch - no cache for dynamic data
-      cache: "no-store",
+      // Let the browser handle HTTP caching based on API Cache-Control headers
+      cache: "default",
     });
 
     if (!response.ok) {
@@ -87,51 +84,20 @@ class ApiClient {
   /**
    * Get company information
    */
-  async getCompanyInfo(useCache: boolean = true): Promise<CompanyInfo> {
-    const cacheKey = CacheKeys.COMPANY_INFO;
-
-    // Check cache first
-    if (useCache) {
-      const cached = getCachedData<CompanyInfo>(cacheKey);
-      if (cached) {
-        return cached;
-      }
-    }
-
-    // Fetch from API
+  async getCompanyInfo(): Promise<CompanyInfo> {
     const response = await this.request<CompanyInfo>("/api/company");
-    const data = response.data;
-
-    // Cache the result
-    if (useCache) {
-      setCachedData(cacheKey, data, CACHE_DURATION);
-    }
-
-    return data;
+    return response.data;
   }
 
   /**
    * Get all services
    * @param active - Only return active services
    * @param locale - Locale for localized fields (jp or vi)
-   * @param useCache - Whether to use cache (default: true)
    */
   async getServices(
     active: boolean = true,
-    locale: string = "jp",
-    useCache: boolean = true
+    locale: string = "jp"
   ): Promise<Service[]> {
-    const cacheKey = CacheKeys.SERVICES(locale, active);
-
-    // Check cache first
-    if (useCache) {
-      const cached = getCachedData<Service[]>(cacheKey);
-      if (cached) {
-        return cached;
-      }
-    }
-
-    // Fetch from API
     const params = new URLSearchParams();
     if (active) {
       params.append("active", "true");
@@ -141,52 +107,25 @@ class ApiClient {
     const response = await this.request<Service[]>(
       `/api/services?${params.toString()}`
     );
-    const data = response.data;
-
-    // Cache the result
-    if (useCache) {
-      setCachedData(cacheKey, data, CACHE_DURATION);
-    }
-
-    return data;
+    return response.data;
   }
 
   /**
    * Get a single service by ID
    * @param id - Service ID
    * @param locale - Locale for localized fields (jp or vi)
-   * @param useCache - Whether to use cache (default: true)
    */
   async getService(
     id: string,
-    locale: string = "jp",
-    useCache: boolean = true
+    locale: string = "jp"
   ): Promise<Service> {
-    const cacheKey = CacheKeys.SERVICE(id, locale);
-
-    // Check cache first
-    if (useCache) {
-      const cached = getCachedData<Service>(cacheKey);
-      if (cached) {
-        return cached;
-      }
-    }
-
-    // Fetch from API
     const params = new URLSearchParams();
     params.append("locale", locale);
 
     const response = await this.request<Service>(
       `/api/services/${id}?${params.toString()}`
     );
-    const data = response.data;
-
-    // Cache the result
-    if (useCache) {
-      setCachedData(cacheKey, data, CACHE_DURATION);
-    }
-
-    return data;
+    return response.data;
   }
 }
 

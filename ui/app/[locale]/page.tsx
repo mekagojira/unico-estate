@@ -11,20 +11,13 @@ import News from '../components/News';
 import Footer from '../components/Footer';
 import Navigation from '../components/Navigation';
 import { api, type CompanyInfo } from '@/lib/api';
-import { getCachedData, CacheKeys } from '@/lib/cache';
 
 // Disable SSR for this page to prevent hydration mismatches
 const HomePageContent = () => {
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
 
   useEffect(() => {
-    // Only read from localStorage after component mounts (client-side only)
-    const cachedData = getCachedData<CompanyInfo>(CacheKeys.COMPANY_INFO);
-    if (cachedData) {
-      setCompanyInfo(cachedData);
-    }
-
-    // Fetch company info for footer (will use cache if available)
+    // Fetch company info for footer
     api.getCompanyInfo()
       .then(setCompanyInfo)
       .catch(() => {
